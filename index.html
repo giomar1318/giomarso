@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ff6b57">
+  <meta name="description" content="읽고, 쓰고, 들으며 놀이처럼 익히는 유아 한글 학습 앱">
+  <title>한글 놀이터</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23ff6b57'/%3E%3Ctext x='32' y='44' font-size='37' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='700'%3E가%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <span class="character-cursor" id="characterCursor" aria-hidden="true"><span>🤖</span><small>✏️</small></span>
+  <div class="robot-world" aria-hidden="true">
+    <span class="robot-friend robot-one">🤖</span>
+    <span class="robot-friend robot-two">🤖</span>
+    <span class="robot-spark spark-one">⚡</span>
+    <span class="robot-spark spark-two">✦</span>
+    <span class="robot-spark spark-three">⚡</span>
+  </div>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="한글 놀이터 처음으로">
+      <span class="brand-mark" aria-hidden="true">가</span>
+      <span>한글 놀이터</span>
+    </a>
+    <div class="top-actions">
+      <div class="star-count" aria-label="모은 별"><span aria-hidden="true">★</span> <strong id="starCount">0</strong></div>
+      <button class="icon-button" id="soundToggle" type="button" aria-label="로봇 목소리 켜기 또는 끄기" aria-pressed="false" title="로봇 목소리">
+        <svg class="sound-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Zm4.5 3.5a5 5 0 0 1 0 7M18 6a8 8 0 0 1 0 12"/></svg>
+        <svg class="sound-off" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 4 16 16M11 5 7.5 7.8M6 9H3v6h3l5 4v-5M16.5 9a5 5 0 0 1 .8 6.2"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <section class="welcome" aria-labelledby="welcomeTitle">
+      <div>
+        <p class="eyebrow">오늘도 한 글자씩</p>
+        <h1 id="welcomeTitle">어떤 놀이를 해볼까요?</h1>
+      </div>
+      <div class="progress-wrap" aria-label="오늘의 진행률">
+        <div class="progress-copy"><span>오늘의 별</span><strong><span id="progressStars">0</span> / 5</strong></div>
+        <div class="progress-track"><span id="progressBar"></span></div>
+      </div>
+    </section>
+
+    <nav class="mode-tabs" aria-label="한글 놀이 선택">
+      <button class="mode-tab is-active" data-view="learn" type="button"><span class="tab-icon" aria-hidden="true">🤖</span><span>글자 익히기</span></button>
+      <button class="mode-tab" data-view="read" type="button"><span class="tab-icon" aria-hidden="true">📚</span><span>읽기 놀이</span></button>
+      <button class="mode-tab" data-view="write" type="button"><span class="tab-icon" aria-hidden="true">✏️</span><span>쓰기 놀이</span></button>
+      <button class="mode-tab" data-view="listen" type="button"><span class="tab-icon" aria-hidden="true">🔊</span><span>듣기 놀이</span></button>
+    </nav>
+
+    <section class="view is-active" id="learnView" aria-labelledby="learnTitle">
+      <div class="section-heading">
+        <div><p class="section-kicker">차근차근 배워요</p><h2 id="learnTitle">글자를 눌러 소리를 들어요</h2></div>
+        <p class="helper">마음에 드는 글자를 콕 눌러 보세요.</p>
+      </div>
+      <div class="category-tabs" role="tablist" aria-label="글자 종류">
+        <button role="tab" aria-selected="true" data-category="consonants">자음 <span>14</span></button>
+        <button role="tab" aria-selected="false" data-category="vowels">모음 <span>10</span></button>
+        <button role="tab" aria-selected="false" data-category="doubleConsonants">쌍자음 <span>5</span></button>
+        <button role="tab" aria-selected="false" data-category="compoundVowels">쌍모음 <span>11</span></button>
+      </div>
+      <div class="letter-grid" id="letterGrid" aria-live="polite"></div>
+      <div class="letter-coach" id="letterCoach">
+        <div class="coach-letter" id="coachLetter">ㄱ</div>
+        <div class="coach-copy"><span id="coachType">자음</span><strong id="coachName">기역</strong><p id="coachHint">“가방”의 첫소리예요.</p></div>
+        <button class="listen-button" id="coachSpeak" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Zm4.5 3.5a5 5 0 0 1 0 7M18 6a8 8 0 0 1 0 12"/></svg> 다시 듣기</button>
+      </div>
+    </section>
+
+    <section class="view" id="readView" aria-labelledby="readTitle" hidden>
+      <div class="game-layout">
+        <div class="game-copy"><p class="section-kicker">읽기 놀이</p><h2 id="readTitle">그림에 맞는 낱말을 찾아요</h2><p>글자를 천천히 읽고 알맞은 답을 눌러 보세요.</p><div class="round-badge">문제 <strong id="readRound">1</strong> / 5</div></div>
+        <div class="game-card">
+          <div class="picture-card"><span id="readEmoji" aria-hidden="true">🦋</span><p>이 그림의 이름은?</p></div>
+          <div class="answer-grid" id="readAnswers"></div>
+          <p class="feedback" id="readFeedback" aria-live="polite"></p>
+          <button class="primary-button" id="nextRead" type="button" hidden>다음 문제</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="writeView" aria-labelledby="writeTitle" hidden>
+      <div class="game-layout">
+        <div class="game-copy"><p class="section-kicker">쓰기 놀이</p><h2 id="writeTitle">점선을 따라 써봐요</h2><p>손가락이나 마우스로 큰 글자를 따라 그려 보세요.</p><div class="write-picker" id="writePicker" aria-label="따라 쓸 글자 선택"></div></div>
+        <div class="game-card writing-card">
+          <div class="canvas-wrap"><span class="trace-letter" id="traceLetter">가</span><canvas id="writeCanvas" aria-label="한글 따라 쓰기 공간"></canvas></div>
+          <div class="canvas-actions"><button class="secondary-button" id="clearCanvas" type="button">다시 쓰기</button><button class="primary-button" id="checkWriting" type="button">다 썼어요</button></div>
+          <p class="feedback" id="writeFeedback" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="listenView" aria-labelledby="listenTitle" hidden>
+      <div class="game-layout">
+        <div class="game-copy"><p class="section-kicker">듣기 놀이</p><h2 id="listenTitle">소리를 듣고 글자를 골라요</h2><p>스피커를 누른 뒤 들리는 글자를 찾아보세요.</p><div class="round-badge">문제 <strong id="listenRound">1</strong> / 5</div></div>
+        <div class="game-card listen-card">
+          <button class="big-speaker" id="playSound" type="button" aria-label="문제 소리 듣기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Zm4.5 3.5a5 5 0 0 1 0 7M18 6a8 8 0 0 1 0 12"/></svg><span>소리 듣기</span></button>
+          <div class="answer-grid letters" id="listenAnswers"></div>
+          <p class="feedback" id="listenFeedback" aria-live="polite"></p>
+          <button class="primary-button" id="nextListen" type="button" hidden>다음 문제</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="celebration" id="celebration" aria-live="assertive" hidden><div><span class="celebration-robot" aria-hidden="true">🤖</span><span>★</span><strong>참 잘했어요!</strong><p>로봇 친구와 별을 하나 모았어요.</p></div></div>
+  <script src="script.js"></script>
+</body>
+</html>
